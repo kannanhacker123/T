@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JEE Advanced Response Sheet Analyzer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            color: #2d3748;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            width: 100%;
+            max-width: 900px;
+            margin-top: 2rem;
+        }
+        h1 {
+            color: #1a202c;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 2.25rem;
+            font-weight: 700;
+        }
+        h2 {
+            color: #2c5282;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        .section-title {
+            background-color: #e2e8f0;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-weight: 500;
+            color: #4a5568;
+        }
+        input[type="number"], select {
+            width: 100%;
+            padding: 0.6rem;
+            border: 1px solid #cbd5e0;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            color: #2d3748;
+            transition: border-color 0.2s;
+        }
+        input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: #3182ce;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+        }
+        button {
+            background-color: #3182ce;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            width: 100%;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        button:hover {
+            background-color: #2b6cb0;
+            transform: translateY(-1px);
+        }
+        button:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+        .results {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background-color: #e6fffa;
+            border-radius: 1rem;
+            border-left: 5px solid #38b2ac;
+            display: none; /* Hidden by default */
+        }
+        .stat-box {
+            background-color: #f7fafc;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        .stat-box h3 {
+            margin-top: 0;
+            color: #2d3748;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #38b2ac;
+            margin-bottom: 0.5rem;
+        }
+        .note {
+            font-style: italic;
+            color: #718096;
+            font-size: 0.875rem;
+        }
+        .explanation-text {
+            background-color: #ebf8ff;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-top: 1.5rem;
+            color: #2c5282;
+        }
+        .chart-container {
+            width: 100%;
+            height: 400px;
+            margin-top: 2rem;
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            padding: 1rem;
+        }
+        .message-box {
+            display: none;
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .message-box.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>JEE Advanced Response Sheet Analyzer</h1>
+        <p class="explanation-text mb-6">
+            This tool helps you analyze your JEE Advanced response sheet by calculating your score based on answered questions and simulating potential scores for questions you marked for review, assuming a 25% chance of a correct guess for MCQs/MSQs.
+        </p>
+
+        <div id="messageBox" class="message-box"></div>
+
+        <div class="input-section">
+            <h2 class="section-title">Paper 1 (Math, Physics, Chemistry)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="col-span-1">
+                    <h3 class="font-semibold text-lg mb-2">Single Correct (SCQ)</h3>
+                    <div class="form-group">
+                        <label for="p1_scq_answered">Answered Correctly (assumed):</label>
+                        <input type="number" id="p1_scq_answered_correct" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="p1_scq_answered_incorrect">Answered Incorrectly (assumed):</label>
+                        <input type="number" id="p1_scq_answered_incorrect" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="p1_scq_marked">Marked For Review:</label>
+                        <input type="number" id="p1_scq_marked" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="p1_scq_not_attempted">Not Answered/Attempted:</label>
+                        <input type="number" id="p1_scq_not_attempted" min="0" value="0">
+                    </div>
+                </div>
+
+                <div class="col-span-1">
+                    <h3 class="font-semibold text-lg mb-2">Multiple Select (MSQ)</h3>
+                    <div class="form-group">
+                        <label for="p1_msq_answered">Answered Correctly (assumed all options correct):</label>
+                        <input type="number" id="p1_msq_answered_correct" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="p1_msq_answered_partial">Answered Partially Correct (assumed):</label>
+                        <input type="number" id="p1_msq_answered_partial" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="p1_msq_answered_incorrect">Answered Incorrectly (assumed negative marks):</label>
+                        <input type="number" id="p1_msq_answered_incorrect" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="p1_msq_marked">Marked For Review:</label>
+                        <input type="number" id="p1_msq_marked" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="p1_msq_not_attempted">Not Answered/Attempted:</label>
+                        <input type="number" id="p1_msq_not_attempted" min="0" value="0">
+                    </div>
+                </div>
+
+                <div class="col-span-1">
+                    <h3 class="font-semibold text-lg mb-2">Numerical Answer (NAT)</h3>
+                    <div class="form-group">
+                        <label for="p1_nat_answered">Answered Correctly (assumed):</label>
+                        <input type="number" id="p1_nat_answered_correct" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="p1_nat_answered_incorrect">Answered Incorrectly (assumed 0 marks):</label>
+                        <input type="number" id="p1_nat_answered_incorrect" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="p1_nat_marked">Marked For Review:</label>
+                        <input type="number" id="p1_nat_marked" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="p1_nat_not_attempted">Not Answered/Attempted:</label>
+                        <input type="number" id="p1_nat_not_attempted" min="0" value="0">
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title mt-6">Paper 2 (Math, Physics, Chemistry)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="col-span-1">
+                    <h3 class="font-semibold text-lg mb-2">Single Correct (SCQ)</h3>
+                    <div class="form-group">
+                        <label for="p2_scq_answered">Answered Correctly (assumed):</label>
+                        <input type="number" id="p2_scq_answered_correct" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="p2_scq_answered_incorrect">Answered Incorrectly (assumed):</label>
+                        <input type="number" id="p2_scq_answered_incorrect" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="p2_scq_marked">Marked For Review:</label>
+                        <input type="number" id="p2_scq_marked" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="p2_scq_not_attempted">Not Answered/Attempted:</label>
+                        <input type="number" id="p2_scq_not_attempted" min="0" value="0">
+                    </div>
+                </div>
+
+                <div class="col-span-1">
+                    <h3 class="font-semibold text-lg mb-2">Multiple Select (MSQ)</h3>
+                    <div class="form-group">
+                        <label for="p2_msq_answered">Answered Correctly (assumed all options correct):</label>
+                        <input type="number" id="p2_msq_answered_correct" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="p2_msq_answered_partial">Answered Partially Correct (assumed):</label>
+                        <input type="number" id="p2_msq_answered_partial" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="p2_msq_answered_incorrect">Answered Incorrectly (assumed negative marks):</label>
+                        <input type="number" id="p2_msq_answered_incorrect" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="p2_msq_marked">Marked For Review:</label>
+                        <input type="number" id="p2_msq_marked" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="p2_msq_not_attempted">Not Answered/Attempted:</label>
+                        <input type="number" id="p2_msq_not_attempted" min="0" value="0">
+                    </div>
+                </div>
+
+                <div class="col-span-1">
+                    <h3 class="font-semibold text-lg mb-2">Numerical Answer (NAT)</h3>
+                    <div class="form-group">
+                        <label for="p2_nat_answered">Answered Correctly (assumed):</label>
+                        <input type="number" id="p2_nat_answered_correct" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="p2_nat_answered_incorrect">Answered Incorrectly (assumed 0 marks):</label>
+                        <input type="number" id="p2_nat_answered_incorrect" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="p2_nat_marked">Marked For Review:</label>
+                        <input type="number" id="p2_nat_marked" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="p2_nat_not_attempted">Not Answered/Attempted:</label>
+                        <input type="number" id="p2_nat_not_attempted" min="0" value="0">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group mt-6">
+                <label for="simulations">Number of Simulations (for Marked For Review questions):</label>
+                <input type="number" id="simulations" min="1000" max="100000" value="10000">
+            </div>
+        </div>
+        
+        <button id="calculateBtn" class="mt-8">Calculate Probable Score Range</button>
+
+        <div id="results" class="results">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Results Summary</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                <div class="stat-box">
+                    <h3>Confirmed Score</h3>
+                    <div class="stat-value" id="confirmedScore">--</div>
+                    <div class="note">Score from answered questions (assuming correctness based on input)</div>
+                </div>
+                <div class="stat-box">
+                    <h3>Expected Score (with guesses)</h3>
+                    <div class="stat-value" id="expectedTotalScore">--</div>
+                    <div class="note">Overall average score including simulated guesses</div>
+                </div>
+                <div class="stat-box">
+                    <h3>Standard Deviation (of guesses)</h3>
+                    <div class="stat-value" id="stdDev">--</div>
+                    <div class="note">Variability in scores from simulated guesses</div>
+                </div>
+                <div class="stat-box">
+                    <h3>Probable Score Range (95% CI)</h3>
+                    <div class="stat-value" id="scoreRange">--</div>
+                    <div class="note">Range where your final score is likely to fall</div>
+                </div>
+                <div class="stat-box">
+                    <h3>Expected Guessing Contribution</h3>
+                    <div class="stat-value" id="expectedGuessScore">--</div>
+                    <div class="note">Average score from only 'Marked For Review' questions</div>
+                </div>
+                <div class="stat-box">
+                    <h3>Probability of Positive Guess Score</h3>
+                    <div class="stat-value" id="positiveGuessProb">--</div>
+                    <div class="note">Chance of getting > 0 marks from 'Marked For Review' questions</div>
+                </div>
+            </div>
+
+            <div class="explanation-text mt-6">
+                <h3 class="font-semibold text-lg mb-2">Assumptions & Explanation:</h3>
+                <ul class="list-disc list-inside space-y-1">
+                    <li>This calculation assumes your 'Answered Correctly' and 'Answered Incorrectly' inputs are accurate.</li>
+                    <li>For 'Marked For Review' SCQ/MSQ questions, a 25% chance of getting full marks and a 75% chance of getting negative marks is applied during simulation, as per your request.</li>
+                    <li>For 'Marked For Review' NAT questions, a 0% chance of getting correct marks is assumed due to the nature of random numerical guessing.</li>
+                    <li>'Not Answered/Attempted' questions contribute 0 marks.</li>
+                    <li>The 'Probable Score Range' represents a 95% confidence interval for your total score, considering the variability introduced by random guessing.</li>
+                    <li>This tool is for estimation only. Your actual score depends on the official answer key and detailed marking criteria.</li>
+                </ul>
+            </div>
+            
+            <h2 class="text-xl font-bold text-gray-800 mb-4 mt-6">Score Distribution (Simulated Guesses)</h2>
+            <div class="chart-container" id="distributionChart"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.24.2/plotly.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const calculateBtn = document.getElementById('calculateBtn');
+            const resultsDiv = document.getElementById('results');
+            const messageBox = document.getElementById('messageBox');
+
+            // Function to show custom alert message
+            function showAlert(message) {
+                messageBox.textContent = message;
+                messageBox.classList.add('show');
+                setTimeout(() => {
+                    messageBox.classList.remove('show');
+                }, 5000); // Hide after 5 seconds
+            }
+
+            // Define marking schemes
+            const MARKING_SCHEMES = {
+                'SCQ': { correct: 3, incorrect: -1, options: 4 },
+                'MSQ': { full_correct: 4, partial_correct_3: 3, partial_correct_2: 2, partial_correct_1: 1, incorrect: -2, options: 4 },
+                'NAT': { correct: 4, incorrect: 0 } // NAT has no negative marking for incorrect answers
+            };
+
+            calculateBtn.addEventListener('click', calculateScore);
+
+            function getInputValue(id) {
+                return parseInt(document.getElementById(id).value) || 0;
+            }
+
+            function calculateScore() {
+                // Get inputs for Paper 1
+                const p1_scq_ac = getInputValue('p1_scq_answered_correct');
+                const p1_scq_ai = getInputValue('p1_scq_answered_incorrect');
+                const p1_scq_marked = getInputValue('p1_scq_marked');
+                const p1_scq_na = getInputValue('p1_scq_not_attempted');
+
+                const p1_msq_ac = getInputValue('p1_msq_answered_correct');
+                const p1_msq_ap = getInputValue('p1_msq_answered_partial'); // Assuming partial correct is handled separately
+                const p1_msq_ai = getInputValue('p1_msq_answered_incorrect');
+                const p1_msq_marked = getInputValue('p1_msq_marked');
+                const p1_msq_na = getInputValue('p1_msq_not_attempted');
+
+                const p1_nat_ac = getInputValue('p1_nat_answered_correct');
+                const p1_nat_ai = getInputValue('p1_nat_answered_incorrect');
+                const p1_nat_marked = getInputValue('p1_nat_marked');
+                const p1_nat_na = getInputValue('p1_nat_not_attempted');
+
+                // Get inputs for Paper 2
+                const p2_scq_ac = getInputValue('p2_scq_answered_correct');
+                const p2_scq_ai = getInputValue('p2_scq_answered_incorrect');
+                const p2_scq_marked = getInputValue('p2_scq_marked');
+                const p2_scq_na = getInputValue('p2_scq_not_attempted');
+
+                const p2_msq_ac = getInputValue('p2_msq_answered_correct');
+                const p2_msq_ap = getInputValue('p2_msq_answered_partial');
+                const p2_msq_ai = getInputValue('p2_msq_answered_incorrect');
+                const p2_msq_marked = getInputValue('p2_msq_marked');
+                const p2_msq_na = getInputValue('p2_msq_not_attempted');
+
+                const p2_nat_ac = getInputValue('p2_nat_answered_correct');
+                const p2_nat_ai = getInputValue('p2_nat_answered_incorrect');
+                const p2_nat_marked = getInputValue('p2_nat_marked');
+                const p2_nat_na = getInputValue('p2_nat_not_attempted');
+
+                const simulations = getInputValue('simulations');
+
+                // --- Calculate Confirmed Score (from non-guessed questions) ---
+                let confirmedScore = 0;
+                // Paper 1
+                confirmedScore += p1_scq_ac * MARKING_SCHEMES.SCQ.correct;
+                confirmedScore += p1_scq_ai * MARKING_SCHEMES.SCQ.incorrect;
+                confirmedScore += p1_msq_ac * MARKING_SCHEMES.MSQ.full_correct;
+                // Assuming partial correct for MSQ is fixed, using a placeholder value (e.g., average of partial marks)
+                // For simplicity, let's assume partial correct means +2 for now, or user provides specific partial counts.
+                // For a more precise model, user would need to input how many were +3, +2, +1.
+                // Here, we'll use a simplified average for 'answered_partial' if it's not specified by user what kind of partial.
+                // Let's assume an average of +2 for partially correct MSQs if user has chosen specific options.
+                confirmedScore += p1_msq_ap * MARKING_SCHEMES.MSQ.partial_correct_2; // Using +2 as a representative partial score
+                confirmedScore += p1_msq_ai * MARKING_SCHEMES.MSQ.incorrect;
+                confirmedScore += p1_nat_ac * MARKING_SCHEMES.NAT.correct;
+                confirmedScore += p1_nat_ai * MARKING_SCHEMES.NAT.incorrect; // Should be 0 for NAT
+
+                // Paper 2
+                confirmedScore += p2_scq_ac * MARKING_SCHEMES.SCQ.correct;
+                confirmedScore += p2_scq_ai * MARKING_SCHEMES.SCQ.incorrect;
+                confirmedScore += p2_msq_ac * MARKING_SCHEMES.MSQ.full_correct;
+                confirmedScore += p2_msq_ap * MARKING_SCHEMES.MSQ.partial_correct_2; // Using +2 as a representative partial score
+                confirmedScore += p2_msq_ai * MARKING_SCHEMES.MSQ.incorrect;
+                confirmedScore += p2_nat_ac * MARKING_SCHEMES.NAT.correct;
+                confirmedScore += p2_nat_ai * MARKING_SCHEMES.NAT.incorrect; // Should be 0 for NAT
+
+
+                // --- Simulate Guessed Questions ---
+                const guess_scores = [];
+                const guess_scq_count = p1_scq_marked + p2_scq_marked;
+                const guess_msq_count = p1_msq_marked + p2_msq_marked;
+                const guess_nat_count = p1_nat_marked + p2_nat_marked;
+                
+                // User's requested 25% chance for MCQs/MSQs
+                const GUESS_PROB_CORRECT_MCQ_MSQ = 0.25; 
+                const GUESS_PROB_INCORRECT_MCQ_MSQ = 0.75;
+
+                // For NAT, random guess is effectively 0% correct
+                const GUESS_PROB_CORRECT_NAT = 0; 
+                const GUESS_PROB_INCORRECT_NAT = 1;
+
+                for (let i = 0; i < simulations; i++) {
+                    let current_guess_score = 0;
+
+                    // Simulate SCQ guesses
+                    for (let q = 0; q < guess_scq_count; q++) {
+                        if (Math.random() < GUESS_PROB_CORRECT_MCQ_MSQ) {
+                            current_guess_score += MARKING_SCHEMES.SCQ.correct;
+                        } else {
+                            current_guess_score += MARKING_SCHEMES.SCQ.incorrect;
+                        }
+                    }
+
+                    // Simulate MSQ guesses (simplified to full_correct or incorrect based on 25% chance)
+                    for (let q = 0; q < guess_msq_count; q++) {
+                        if (Math.random() < GUESS_PROB_CORRECT_MCQ_MSQ) {
+                            current_guess_score += MARKING_SCHEMES.MSQ.full_correct;
+                        } else {
+                            current_guess_score += MARKING_SCHEMES.MSQ.incorrect;
+                        }
+                    }
+
+                    // Simulate NAT guesses (always 0 for random guess)
+                    for (let q = 0; q < guess_nat_count; q++) {
+                        // For random NAT guesses, probability of correct is virtually 0.
+                        // So, it always contributes 0 marks.
+                        current_guess_score += MARKING_SCHEMES.NAT.incorrect; // Which is 0
+                    }
+                    guess_scores.push(current_guess_score);
+                }
+
+                // Calculate statistics for guess scores
+                const mean_guess_score = mean(guess_scores);
+                const std_dev_guess_score = standardDeviation(guess_scores, mean_guess_score);
+                const positive_guess_count = guess_scores.filter(score => score > 0).length;
+                const positive_guess_prob = positive_guess_count / simulations;
+
+                // Calculate overall total scores
+                const total_scores = guess_scores.map(gs => gs + confirmedScore);
+                const expected_total_score = mean(total_scores);
+                const total_std_dev = standardDeviation(total_scores, expected_total_score); // Standard deviation of total scores
+
+                // Calculate 95% confidence interval for total score
+                const lowerBound = Math.floor(expected_total_score - 1.96 * total_std_dev);
+                const upperBound = Math.ceil(expected_total_score + 1.96 * total_std_dev);
+
+                // Update UI
+                document.getElementById('confirmedScore').textContent = confirmedScore.toFixed(2);
+                document.getElementById('expectedTotalScore').textContent = expected_total_score.toFixed(2);
+                document.getElementById('stdDev').textContent = total_std_dev.toFixed(2);
+                document.getElementById('scoreRange').textContent = `${lowerBound} to ${upperBound}`;
+                document.getElementById('expectedGuessScore').textContent = mean_guess_score.toFixed(2);
+                document.getElementById('positiveGuessProb').textContent = (positive_guess_prob * 100).toFixed(1) + '%';
+                
+                // Create distribution chart for total scores
+                createDistributionChart(total_scores);
+
+                resultsDiv.style.display = 'block';
+            }
+
+            function mean(array) {
+                if (array.length === 0) return 0;
+                const sum = array.reduce((a, b) => a + b, 0);
+                return sum / array.length;
+            }
+            
+            function standardDeviation(array, meanValue) {
+                if (array.length === 0) return 0;
+                if (meanValue === undefined) {
+                    meanValue = mean(array);
+                }
+                const squareDiffs = array.map(value => {
+                    const diff = value - meanValue;
+                    return diff * diff;
+                });
+                const avgSquareDiff = mean(squareDiffs);
+                return Math.sqrt(avgSquareDiff);
+            }
+
+            function createDistributionChart(scores) {
+                const minScore = Math.min(...scores);
+                const maxScore = Math.max(...scores);
+                
+                // Dynamic bin size for better visualization
+                const range = maxScore - minScore;
+                let binSize;
+                if (range <= 10) binSize = 1;
+                else if (range <= 50) binSize = 2;
+                else if (range <= 100) binSize = 5;
+                else binSize = Math.ceil(range / 20); // Aim for about 20 bins
+
+                const bins = {};
+                for (let i = Math.floor(minScore / binSize) * binSize; i <= Math.ceil(maxScore / binSize) * binSize + binSize; i += binSize) {
+                    bins[i] = 0;
+                }
+                
+                scores.forEach(score => {
+                    const binKey = Math.floor(score / binSize) * binSize;
+                    bins[binKey] = (bins[binKey] || 0) + 1;
+                });
+                
+                const binKeys = Object.keys(bins).map(Number).sort((a,b) => a-b);
+                const binValues = binKeys.map(key => bins[key] || 0);
+                const normalizedBinValues = binValues.map(value => value / scores.length);
+
+                const data = [{
+                    x: binKeys.map(key => key + binSize / 2),
+                    y: normalizedBinValues,
+                    type: 'bar',
+                    marker: {
+                        color: '#38b2ac',
+                        opacity: 0.8,
+                        line: {
+                            color: '#2c7a7b',
+                            width: 1
+                        }
+                    },
+                    name: 'Probability'
+                }];
+                
+                const layout = {
+                    title: 'Overall Score Distribution (Including Simulated Guesses)',
+                    xaxis: {
+                        title: 'Total Score',
+                        tickformat: 'd',
+                        automargin: true
+                    },
+                    yaxis: {
+                        title: 'Probability',
+                        tickformat: '.2%',
+                        automargin: true
+                    },
+                    bargap: 0.1,
+                    hovermode: 'closest',
+                    responsive: true,
+                    margin: { t: 50, b: 50, l: 50, r: 50 }
+                };
+                
+                Plotly.newPlot('distributionChart', data, layout);
+            }
+        });
+    </script>
+</body>
+</html>
