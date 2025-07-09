@@ -1,464 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JEE Mains Random Guessing Score Calculator</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f7fa;
-        }
-        
-        h1 {
-            color: #2c3e50;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        
-        .container {
-            background-color: white;
-            border-radius: 8px;
-            padding: 25px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 25px;
-        }
-        
-        .input-section {
-            margin-bottom: 20px;
-        }
-        
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-        
-        input[type="number"], select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-        
-        button {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            display: block;
-            width: 100%;
-            transition: background-color 0.2s;
-        }
-        
-        button:hover {
-            background-color: #2980b9;
-        }
-        
-        .results {
-            display: none;
-            margin-top: 20px;
-            padding: 20px;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            border-left: 4px solid #3498db;
-        }
-        
-        .stats-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-top: 20px;
-        }
-        
-        .stat-box {
-            flex: 1;
-            min-width: 200px;
-            background-color: white;
-            padding: 15px;
-            border-radius: 6px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        
-        .stat-box h3 {
-            margin-top: 0;
-            color: #2c3e50;
-            font-size: 16px;
-        }
-        
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #3498db;
-            margin: 10px 0;
-        }
-        
-        .explanation {
-            background-color: #ebf5fb;
-            padding: 15px;
-            border-radius: 6px;
-            margin: 20px 0;
-        }
-        
-        .chart-container {
-            width: 100%;
-            height: 400px;
-            margin-top: 30px;
-        }
-        
-        .note {
-            font-style: italic;
-            color: #7f8c8d;
-            margin-top: 10px;
-        }
-        
-        .percentile {
-            font-size: 28px;
-            color: #e74c3c;
-            text-align: center;
-            margin: 20px 0;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        
-        th {
-            background-color: #f2f2f2;
-            font-weight: 600;
-        }
-        
-        tr:hover {
-            background-color: #f9f9f9;
-        }
-    </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>JEE Mains Guessing Score Calculator | Simulate Expected Marks</title>
+
+    <meta name="description"
+        content="Use this free tool to simulate and estimate your JEE Mains score based on random guessing. Supports 2023-25 pattern and custom patterns." />
+    <meta name="keywords"
+        content="JEE Mains, Score Calculator, Random Guessing, Simulation, Exam Preparation, JEE 2025, Expected Marks, Engineering Entrance" />
+    <meta name="author" content="Kannan" />
+
+    <!-- Open Graph Meta -->
+    <meta property="og:title" content="JEE Mains Guessing Score Calculator" />
+    <meta property="og:description"
+        content="Simulate your expected JEE Mains score if you guessed randomly. Try with the 2023-25 pattern or customize your exam setup." />
+    <meta property="og:image" content="https://example.com/jee-mains-score-thumbnail.png" />
+    <meta property="og:url" content="https://example.com/jee-mains-score-calculator" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Card Meta -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="JEE Mains Guessing Score Calculator" />
+    <meta name="twitter:description"
+        content="Free tool to estimate your JEE Mains score if you guessed all questions." />
+    <meta name="twitter:image" content="https://example.com/jee-mains-score-thumbnail.png" />
+
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico" />
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <h1>JEE Mains Random Guessing Score Calculator</h1>
-    
-    <div class="container">
-        <div class="explanation">
-            <p>This calculator estimates your expected score and score distribution if you were to randomly guess all answers on the JEE Mains exam.</p>
+    <main>
+        <div class="warning-box" role="alert">
+            ⚠️ This calculator is based on pure random guessing. It is not a predictor of real JEE Mains scores. Use it
+            for curiosity or fun only!
         </div>
+        <header>
+            <h1>JEE Mains Random Guessing Score Calculator</h1>
+        </header>
+
+        <section class="container">
+            <article class="explanation">
+                <p>This calculator estimates your expected score and score distribution if you were to randomly guess
+                    all answers on the JEE Mains exam.</p>
+            </article>
+
+            <section class="input-section">
+                <div class="form-group">
+                    <label for="examPattern">Exam Pattern:</label>
+                    <select id="examPattern">
+                        <option value="2023">JEE Mains 2023-25 Pattern</option>
+                        <option value="custom">Custom Pattern</option>
+                    </select>
+                </div>
+
+                <div id="customSettings" style="display: none;">
+                    <div class="form-group">
+                        <label for="totalQuestions">Total Questions:</label>
+                        <input type="number" id="totalQuestions" min="1" value="90">
+                    </div>
+                    <div class="form-group">
+                        <label for="mcqQuestions">MCQ Questions:</label>
+                        <input type="number" id="mcqQuestions" min="0" value="75">
+                    </div>
+                    <div class="form-group">
+                        <label for="numericalQuestions">Numerical Answer Type Questions:</label>
+                        <input type="number" id="numericalQuestions" min="0" value="15">
+                    </div>
+                    <div class="form-group">
+                        <label for="mcqOptions">MCQ Options per Question:</label>
+                        <input type="number" id="mcqOptions" min="2" value="4">
+                    </div>
+                    <div class="form-group">
+                        <label for="marksPerCorrect">Marks per Correct Answer:</label>
+                        <input type="number" id="marksPerCorrect" min="1" value="4">
+                    </div>
+                    <div class="form-group">
+                        <label for="negativeMarks">Negative Marks for Wrong MCQ Answer:</label>
+                        <input type="number" id="negativeMarks" min="0" value="1">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="simulations">Number of Simulations:</label>
+                    <input type="number" id="simulations" min="100" max="100000" value="10000">
+                </div>
+            </section>
+
+            <button id="calculateBtn">Calculate Expected Score</button>
+
+            <section id="results" class="results" aria-live="polite">
+                <h2>Results Summary</h2>
+
+                <div class="stats-container">
+                    <div class="stat-box">
+                        <h3>Expected Score</h3>
+                        <div class="stat-value" id="expectedScore">--</div>
+                        <div class="note">Average score from simulations</div>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Standard Deviation</h3>
+                        <div class="stat-value" id="stdDev">--</div>
+                        <div class="note">Score variability</div>
+                    </div>
+                    <div class="stat-box">
+                        <h3>95% Score Range</h3>
+                        <div class="stat-value" id="scoreRange">--</div>
+                        <div class="note">Likely score range</div>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Probability of Positive Score</h3>
+                        <div class="stat-value" id="positiveProb">--</div>
+                        <div class="note">Chance of scoring &gt; 0</div>
+                    </div>
+                </div>
+
+                <article class="explanation">
+                    <h3>Theoretical Calculation</h3>
+                    <p id="theoreticalExplanation"></p>
+                </article>
+
+                <h3>Score Distribution</h3>
+                <div class="chart-container" id="distributionChart"></div>
+
+                <aside class="note">
+                    <p><strong>Note:</strong> This is a statistical estimate based on random guessing. Your actual score
+                        may vary. Real exam performance would typically be better than pure guessing if you have any
+                        subject knowledge.</p>
+                    <p>The JEE Mains requires subject knowledge and proper preparation. This calculator is provided for
+                        educational purposes.</p>
+                </aside>
+            </section>
+        </section>
         
-        <div class="input-section">
-            <div class="form-group">
-                <label for="examPattern">Exam Pattern:</label>
-                <select id="examPattern">
-                    <option value="2023">JEE Mains 2023-25 Pattern</option>
-                    <option value="custom">Custom Pattern</option>
-                </select>
-            </div>
-            
-            <div id="customSettings" style="display: none;">
-                <div class="form-group">
-                    <label for="totalQuestions">Total Questions:</label>
-                    <input type="number" id="totalQuestions" min="1" value="90">
-                </div>
-                <div class="form-group">
-                    <label for="mcqQuestions">MCQ Questions:</label>
-                    <input type="number" id="mcqQuestions" min="0" value="75">
-                </div>
-                <div class="form-group">
-                    <label for="numericalQuestions">Numerical Answer Type Questions:</label>
-                    <input type="number" id="numericalQuestions" min="0" value="15">
-                </div>
-                <div class="form-group">
-                    <label for="mcqOptions">MCQ Options per Question:</label>
-                    <input type="number" id="mcqOptions" min="2" value="4">
-                </div>
-                <div class="form-group">
-                    <label for="marksPerCorrect">Marks per Correct Answer:</label>
-                    <input type="number" id="marksPerCorrect" min="1" value="4">
-                </div>
-                <div class="form-group">
-                    <label for="negativeMarks">Negative Marks for Wrong MCQ Answer:</label>
-                    <input type="number" id="negativeMarks" min="0" value="1">
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label for="simulations">Number of Simulations:</label>
-                <input type="number" id="simulations" min="100" max="100000" value="10000">
-            </div>
-        </div>
-        
-        <button id="calculateBtn">Calculate Expected Score</button>
-        
-        <div id="results" class="results">
-            <h2>Results Summary</h2>
-            
-            <div class="stats-container">
-                <div class="stat-box">
-                    <h3>Expected Score</h3>
-                    <div class="stat-value" id="expectedScore">--</div>
-                    <div class="note">Average score from simulations</div>
-                </div>
-                <div class="stat-box">
-                    <h3>Standard Deviation</h3>
-                    <div class="stat-value" id="stdDev">--</div>
-                    <div class="note">Score variability</div>
-                </div>
-                <div class="stat-box">
-                    <h3>95% Score Range</h3>
-                    <div class="stat-value" id="scoreRange">--</div>
-                    <div class="note">Likely score range</div>
-                </div>
-                <div class="stat-box">
-                    <h3>Probability of Positive Score</h3>
-                    <div class="stat-value" id="positiveProb">--</div>
-                    <div class="note">Chance of scoring > 0</div>
-                </div>
-            </div>
-            
-            <div class="explanation">
-                <h3>Theoretical Calculation</h3>
-                <p id="theoreticalExplanation"></p>
-            </div>
-            
-            <h3>Score Distribution</h3>
-            <div class="chart-container" id="distributionChart"></div>
-            
-            <div class="note">
-                <p><strong>Note:</strong> This is a statistical estimate based on random guessing. Your actual score may vary. Real exam performance would typically be better than pure guessing if you have any subject knowledge.</p>
-                <p>The JEE Mains requires subject knowledge and proper preparation. This calculator is provided for educational purposes.</p>
-            </div>
-        </div>
-    </div>
+        <footer>
+            <p style="text-align:center; color:#777;">&copy; 2025 Kannan. Built for learners & aspiring engineers.</p>
+        </footer>
+    </main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.24.2/plotly.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Get elements
-            const examPatternSelect = document.getElementById('examPattern');
-            const customSettings = document.getElementById('customSettings');
-            const calculateBtn = document.getElementById('calculateBtn');
-            const resultsDiv = document.getElementById('results');
-            
-            // Set up event listeners
-            examPatternSelect.addEventListener('change', function() {
-                if (this.value === 'custom') {
-                    customSettings.style.display = 'block';
-                } else {
-                    customSettings.style.display = 'none';
-                }
-            });
-            
-            calculateBtn.addEventListener('click', calculateScore);
-            
-            function calculateScore() {
-                // Get input values
-                const pattern = examPatternSelect.value;
-                
-                let totalQuestions, mcqQuestions, numericalQuestions, mcqOptions, marksPerCorrect, negativeMarks;
-                
-                if (pattern === '2023') {
-                    // JEE Mains 2023-25 pattern
-                    totalQuestions = 90;
-                    mcqQuestions = 75;
-                    numericalQuestions = 15;
-                    mcqOptions = 4;
-                    marksPerCorrect = 4;
-                    negativeMarks = 1;
-                } else {
-                    // Custom pattern
-                    totalQuestions = parseInt(document.getElementById('totalQuestions').value);
-                    mcqQuestions = parseInt(document.getElementById('mcqQuestions').value);
-                    numericalQuestions = parseInt(document.getElementById('numericalQuestions').value);
-                    mcqOptions = parseInt(document.getElementById('mcqOptions').value);
-                    marksPerCorrect = parseInt(document.getElementById('marksPerCorrect').value);
-                    negativeMarks = parseInt(document.getElementById('negativeMarks').value);
-                    
-                    // Validate inputs
-                    if (mcqQuestions + numericalQuestions !== totalQuestions) {
-                        alert("The sum of MCQ and Numerical questions must equal the total questions.");
-                        return;
-                    }
-                }
-                
-                const simulations = parseInt(document.getElementById('simulations').value);
-                
-                // Calculate theoretical values
-                const mcqProbCorrect = 1 / mcqOptions;
-                const mcqProbWrong = 1 - mcqProbCorrect;
-                const numericalProbCorrect = 0; // Effectively 0 for random guessing
-                
-                // Expected value for one MCQ question
-                const mcqExpectedValue = (mcqProbCorrect * marksPerCorrect) - (mcqProbWrong * negativeMarks);
-                
-                // Expected value for one numerical question (assume zero for random guessing)
-                const numericalExpectedValue = 0;
-                
-                // Overall theoretical expected value
-                const theoreticalExpectedValue = (mcqQuestions * mcqExpectedValue) + (numericalQuestions * numericalExpectedValue);
-                
-                // Theoretical variance for MCQ questions
-                const mcqVariance = mcqProbCorrect * Math.pow(marksPerCorrect - mcqExpectedValue, 2) + 
-                                  mcqProbWrong * Math.pow(-negativeMarks - mcqExpectedValue, 2);
-                
-                // Theoretical standard deviation
-                const theoreticalStdDev = Math.sqrt(mcqQuestions * mcqVariance);
-                
-                // Run simulations
-                const scores = runSimulations(mcqQuestions, numericalQuestions, mcqOptions, marksPerCorrect, negativeMarks, simulations);
-                
-                // Calculate statistics from simulations
-                const simulationMean = mean(scores);
-                const simulationStdDev = standardDeviation(scores, simulationMean);
-                const positiveScoreCount = scores.filter(score => score > 0).length;
-                const positiveScoreProb = positiveScoreCount / simulations;
-                
-                // Calculate 95% confidence interval
-                const lowerBound = Math.floor(simulationMean - 1.96 * simulationStdDev);
-                const upperBound = Math.ceil(simulationMean + 1.96 * simulationStdDev);
-                
-                // Update UI
-                document.getElementById('expectedScore').textContent = simulationMean.toFixed(2);
-                document.getElementById('stdDev').textContent = simulationStdDev.toFixed(2);
-                document.getElementById('scoreRange').textContent = `${lowerBound} to ${upperBound}`;
-                document.getElementById('positiveProb').textContent = (positiveScoreProb * 100).toFixed(1) + '%';
-                
-                // Update theoretical explanation
-                document.getElementById('theoreticalExplanation').innerHTML = `
-                    <p>For each MCQ question:</p>
-                    <ul>
-                        <li>Probability of guessing correctly: 1/${mcqOptions} = ${mcqProbCorrect.toFixed(4)}</li>
-                        <li>Expected value per MCQ: (${mcqProbCorrect.toFixed(4)} × ${marksPerCorrect}) - (${mcqProbWrong.toFixed(4)} × ${negativeMarks}) = ${mcqExpectedValue.toFixed(4)} marks</li>
-                    </ul>
-                    <p>For ${mcqQuestions} MCQs, the expected contribution is ${mcqQuestions} × ${mcqExpectedValue.toFixed(4)} = ${(mcqQuestions * mcqExpectedValue).toFixed(2)} marks.</p>
-                    <p>For numerical answer type questions, random guessing will yield approximately 0 marks.</p>
-                    <p>Total theoretical expected score: ${theoreticalExpectedValue.toFixed(2)} marks</p>
-                    <p>Theoretical standard deviation: ${theoreticalStdDev.toFixed(2)}</p>
-                `;
-                
-                // Create distribution chart
-                createDistributionChart(scores);
-                
-                // Show results
-                resultsDiv.style.display = 'block';
-            }
-            
-            function runSimulations(mcqQuestions, numericalQuestions, mcqOptions, marksPerCorrect, negativeMarks, simulations) {
-                const scores = [];
-                
-                for (let i = 0; i < simulations; i++) {
-                    let score = 0;
-                    
-                    // Simulate MCQ questions
-                    for (let q = 0; q < mcqQuestions; q++) {
-                        const randomGuess = Math.floor(Math.random() * mcqOptions);
-                        const correctAnswer = 0; // Assuming the first option is always correct for simplicity
-                        
-                        if (randomGuess === correctAnswer) {
-                            // Correct answer
-                            score += marksPerCorrect;
-                        } else {
-                            // Wrong answer
-                            score -= negativeMarks;
-                        }
-                    }
-                    
-                    // Numerical questions are virtually impossible to guess randomly
-                    // We could simulate them, but the probability is effectively 0
-                    
-                    scores.push(score);
-                }
-                
-                return scores;
-            }
-            
-            function mean(array) {
-                const sum = array.reduce((a, b) => a + b, 0);
-                return sum / array.length;
-            }
-            
-            function standardDeviation(array, meanValue) {
-                if (meanValue === undefined) {
-                    meanValue = mean(array);
-                }
-                
-                const squareDiffs = array.map(value => {
-                    const diff = value - meanValue;
-                    return diff * diff;
-                });
-                
-                const avgSquareDiff = mean(squareDiffs);
-                return Math.sqrt(avgSquareDiff);
-            }
-            
-            function createDistributionChart(scores) {
-                // Create a frequency distribution
-                const minScore = Math.min(...scores);
-                const maxScore = Math.max(...scores);
-                
-                // Create bins for the histogram
-                const binSize = Math.max(1, Math.ceil((maxScore - minScore) / 30)); // Adjust bin size for better visibility
-                const bins = {};
-                
-                for (let i = Math.floor(minScore / binSize) * binSize; i <= Math.ceil(maxScore / binSize) * binSize; i += binSize) {
-                    bins[i] = 0;
-                }
-                
-                // Count scores in each bin
-                scores.forEach(score => {
-                    const binKey = Math.floor(score / binSize) * binSize;
-                    bins[binKey] = (bins[binKey] || 0) + 1;
-                });
-                
-                // Convert to arrays for plotting
-                const binKeys = Object.keys(bins).map(Number);
-                const binValues = binKeys.map(key => bins[key] || 0);
-                const normalizedBinValues = binValues.map(value => value / scores.length); // Convert to probability
-                
-                // Create the chart
-                const data = [{
-                    x: binKeys.map(key => key + binSize/2), // Center the bars on the bin
-                    y: normalizedBinValues,
-                    type: 'bar',
-                    marker: {
-                        color: 'rgb(52, 152, 219)',
-                        opacity: 0.8
-                    },
-                    name: 'Probability'
-                }];
-                
-                const layout = {
-                    title: 'Score Distribution (Random Guessing)',
-                    xaxis: {
-                        title: 'Score',
-                        tickformat: 'd'
-                    },
-                    yaxis: {
-                        title: 'Probability',
-                        tickformat: '.2%'
-                    },
-                    bargap: 0.1
-                };
-                
-                Plotly.newPlot('distributionChart', data, layout);
-            }
-        });
-    </script>
+    <script src="/main.js"></script>
 </body>
+
 </html>
